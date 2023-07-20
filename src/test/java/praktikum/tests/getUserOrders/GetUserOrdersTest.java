@@ -135,4 +135,52 @@ public class GetUserOrdersTest {
         Assert.assertEquals("Несоответствует номер заказа",
                 order.getOrder().getNumber(), getUserOrdersResponse.getOrders().get(0).getNumber());
     }
+
+    @Test
+    @DisplayName("Check a couple of orders and sort by updatedAt")
+    public void checkCoupleOrders() {
+        CreateUserResponse user = createUser();
+        String token = user.getAccessToken().split(" ")[1];
+        createOrder(new CreateOrdersRequest(getIngredients(2)), token);
+        CreateOrdersResponse secondOrder = createOrder(new CreateOrdersRequest(getIngredients(2)), token);
+
+        GetUserOrdersResponse getUserOrdersResponse =
+                given()
+                        .auth()
+                        .oauth2(token)
+                        .when()
+                        .get(ENDPOINT_ORDER)
+                        .then()
+                        .assertThat()
+                        .statusCode(HttpStatus.SC_OK)
+                        .extract()
+                        .body()
+                        .as(GetUserOrdersResponse.class);
+
+        deleteUser(token);
+
+        Assert.assertEquals("Неверное количество заказов", 2, getUserOrdersResponse.getOrders().size());
+        Assert.assertEquals("Неверная сортировка по времени обновления заказа",
+                secondOrder.getOrder().getUpdatedAt(), getUserOrdersResponse.getOrders().get(1).getUpdatedAt());
+        Assert.assertEquals("Некорректный идентификатор заказа",
+                secondOrder.getOrder().get_id(), getUserOrdersResponse.getOrders().get(1).get_id());
+    }
+
+    @Test
+    @DisplayName("Check orders without authorization")
+    public void negativeGetUserOrdersWithoutAuth() {
+        GetUserOrdersResponse getUserOrdersResponse =
+                given()
+                        .when()
+                        .get(ENDPOINT_ORDER)
+                        .then()
+                        .assertThat()
+                        .statusCode(HttpStatus.SC_UNAUTHORIZED)
+                        .extract()
+                        .body()
+                        .as(GetUserOrdersResponse.class);
+
+        Assert.assertFalse("Нельзя получить инфо без авторизации", getUserOrdersResponse.getSuccess());
+        Assert.assertEquals("Некорректная ошибка", AUTH_ERROR_INFO, getUserOrdersResponse.getMessage());
+    }
 }

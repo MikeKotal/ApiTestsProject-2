@@ -106,9 +106,17 @@ public class CreateOrderTest {
                 user.getUser().getName(), createOrdersResponse.getOrder().getOwner().getName());
         Assert.assertEquals("Email пользователя отличается",
                 user.getUser().getEmail(), createOrdersResponse.getOrder().getOwner().getEmail());
+        Assert.assertNotNull("Дата создания пользователя не должно быть пустым",
+                createOrdersResponse.getOrder().getOwner().getCreatedAt());
+        Assert.assertNotNull("Дата обновления пользователя не должно быть пустым",
+                createOrdersResponse.getOrder().getOwner().getUpdatedAt());
         Assert.assertNotNull("Полу статус должно быть заполнено", createOrdersResponse.getOrder().getStatus());
         Assert.assertNotNull("Наименование бургера должно быть заполнено",
                 createOrdersResponse.getOrder().getName());
+        Assert.assertNotNull("Дата создания заказа не должно быть пустым",
+                createOrdersResponse.getOrder().getCreatedAt());
+        Assert.assertNotNull("Дата обновления заказа не должно быть пустым",
+                createOrdersResponse.getOrder().getUpdatedAt());
         Assert.assertNotNull("Номер заказа не должен быть пустым", createOrdersResponse.getOrder().getNumber());
         Assert.assertNotNull("Поле цены должно быть заполнено", createOrdersResponse.getOrder().getPrice());
 
