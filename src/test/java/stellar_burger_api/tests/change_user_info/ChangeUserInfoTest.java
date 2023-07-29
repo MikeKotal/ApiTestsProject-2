@@ -66,5 +66,4 @@ public class ChangeUserInfoTest extends Initializer {
         Assert.assertFalse("Нельзя менять email на существующий", changeUserInfoResponse.getSuccess());
         Assert.assertEquals("Некорректная ошибка", SIMILAR_EMAIL_ERROR, changeUserInfoResponse.getMessage());
     }
-
 }

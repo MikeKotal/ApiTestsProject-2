@@ -13,7 +13,7 @@ git clone https://github.com/MikeKotal/ApiTestsProject-2.git
 ```
 Локально запустить тесты, лежат по следующему пути:
 ```
-src/test/java/stellar_burger
+src/test/java/stellar_burger_api
 ```
 Для просмотра отчета в Allure, выполнить следующие комманды:
 ```
